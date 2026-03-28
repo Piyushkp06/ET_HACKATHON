@@ -1,0 +1,8 @@
+streamlit
+redis
+pandas
+plotly
+paramiko
+groq
+kafka-python
+python-dotenv
