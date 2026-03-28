@@ -218,7 +218,14 @@ with right_col:
                         payload = {"reason": log.get("reason")}
                         
                     if payload:
-                        st.json(payload, expanded=False)
+                        # NEW: Check if this payload is our Generative RCA Markdown
+                        if action == "POST_MORTEM_GENERATED" and "rca_markdown" in payload:
+                            st.markdown("---")
+                            st.markdown("### 📄 Auto-Generated RCA Report")
+                            st.markdown(payload["rca_markdown"])
+                            st.markdown("---")
+                        else:
+                            st.json(payload, expanded=False)
     else:
         st.write("Listening to Kafka and Redis event buses...")
 
