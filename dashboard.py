@@ -13,27 +13,157 @@ load_dotenv()
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Autonomic SRE Command Center", page_icon="🧿", layout="wide", initial_sidebar_state="expanded")
 
-# --- CUSTOM CSS (Neon/Hackathon Theme) ---
+# --- EXTREME CUSTOM CSS (Glassmorphism & Cyberpunk Theme) ---
 st.markdown("""
 <style>
-    .reportview-container {
-        background: #0E1117;
+    /* Global Background and Fonts */
+    .stApp {
+        background: radial-gradient(circle at 10% 20%, rgb(17, 24, 39) 0%, rgb(0, 0, 0) 90%);
+        color: #e5e7eb;
+        font-family: 'Inter', sans-serif;
     }
-    .big-font {
-        font-size:5rem !important;
-        color: #00fa9a;
+    
+    /* Hide Streamlit Branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+
+    /* Typography & Headers */
+    h1, h2, h3 {
+        color: #f3f4f6 !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.05em;
+    }
+    
+    /* Cyberpunk Title */
+    .title-glow {
+        text-align: left;
+        font-size: 3.5rem !important;
         font-weight: 900;
-        text-shadow: 0 0 20px rgba(0, 250, 154, 0.4);
-        margin: 0;
-        padding: 0;
+        background: linear-gradient(90deg, #00fa9a, #0bc5ea, #d100d1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient-shift 5s ease infinite;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
     }
-    .status-badge {
-        padding: 5px 10px;
-        border-radius: 15px;
-        font-weight: bold;
+    
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
-    .stExpander div[data-testid="stText"] {
-        font-family: monospace;
+
+    /* Glassmorphism Metric Cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 40px rgba(0, 250, 154, 0.2);
+        border: 1px solid rgba(0, 250, 154, 0.4);
+    }
+    
+    .metric-value-huge {
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: #00fa9a;
+        text-shadow: 0 0 20px rgba(0, 250, 154, 0.6);
+        margin: 10px 0;
+        line-height: 1.1;
+    }
+    .metric-value {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 10px 0;
+        line-height: 1.1;
+    }
+    .metric-label {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+
+    /* Agent Status Badges */
+    .agent-pulse {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: #00fa9a;
+        border-radius: 50%;
+        margin-right: 12px;
+        box-shadow: 0 0 10px #00fa9a;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 250, 154, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(0, 250, 154, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 250, 154, 0); }
+    }
+    .agent-box {
+        background: rgba(0, 250, 154, 0.05);
+        border: 1px solid rgba(0, 250, 154, 0.2);
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 12px;
+        color: #e5e7eb;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        transition: background 0.3s;
+    }
+    .agent-box:hover {
+        background: rgba(0, 250, 154, 0.15);
+    }
+
+    /* Streamlit Expander Overrides */
+    .streamlit-expanderHeader {
+        background: rgba(255,255,255,0.05) !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        font-size: 1.1rem !important;
+    }
+    .streamlit-expanderContent {
+        background: rgba(0,0,0,0.4) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        border-top: none !important;
+        border-bottom-left-radius: 8px !important;
+        border-bottom-right-radius: 8px !important;
+    }
+
+    /* Log Box */
+    .terminal-log {
+        background: #0d1117;
+        padding: 14px;
+        border-radius: 6px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.95rem;
+        color: #a5b4fc;
+        border-left: 4px solid #6366f1;
+        margin-bottom: 10px;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    .terminal-log span.agent-name {
+        font-weight: 900;
+        letter-spacing: 1px;
+    }
+    
+    /* Horizontal Rule styling */
+    hr {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin: 2rem 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -112,25 +242,20 @@ def fetch_data():
 
 # Sidebar Controls
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/8639/8639082.png", width=100)
-    st.title("Admin Controls")
-    auto_refresh = st.checkbox("🔄 Auto-Refresh Dashboard", value=True)
-    st.divider()
-    st.markdown("**Agents Online:**")
-    st.success("🤖 Diagnostic Agent")
-    st.success("🧠 Orchestrator")
-    st.success("🦾 Execution Agent")
-    st.success("🛡️ SLA Monitor")
-    st.success("💰 Verifier Agent")
+    st.image("https://cdn-icons-png.flaticon.com/512/2043/2043236.png", width=100)
+    st.markdown("<h2 style='text-align: left; color: white;'>Nexus Control</h2>", unsafe_allow_html=True)
+    auto_refresh = st.checkbox("🔄 Real-Time Telemetry", value=True)
+    
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<div class='metric-label'>SWARM STATUS</div>", unsafe_allow_html=True)
+    
+    agents = ["Diagnostic Agent", "Orchestrator", "Execution Agent", "Predictive Agent", "SLA Monitor", "Reporting Agent", "Verifier Agent"]
+    for agent in agents:
+        st.markdown(f"<div class='agent-box'><span class='agent-pulse'></span>{agent}</div>", unsafe_allow_html=True)
 
 # Main Dashboard Header
-col1, col2 = st.columns([4, 1])
-with col1:
-    st.title("🚀 Autonomic SRE Command Center")
-    st.markdown("*Multi-Agent Collaborative Auto-Remediation Architecture*")
-with col2:
-    if st.button("🔄 Force Data Sync", use_container_width=True):
-        st.rerun()
+st.markdown("<div class='title-glow'>NEXUS SRE SYSTEM</div>", unsafe_allow_html=True)
+st.markdown("<p style='color: #9ca3af; font-size: 1.3rem; margin-bottom: 2rem;'>Autonomous Multi-Agent Self-Healing Infrastructure</p>", unsafe_allow_html=True)
 
 if cache is None:
     st.error("🚨 CRITICAL: Cannot connect to Redis backend. Please ensure Docker Compose is running (`docker-compose up -d`).")
@@ -138,98 +263,176 @@ if cache is None:
 
 total_saved, incidents = fetch_data()
 
-# --- The "Wow" Factor: Money Printer ---
-st.markdown("### Total ROI / Downtime Cost Prevented (Live)")
-st.markdown(f'<p class="big-font">${total_saved:,.2f}</p>', unsafe_allow_html=True)
-st.divider()
-
-# --- Content Layout ---
-left_col, right_col = st.columns([1.2, 2])
-
+# Calculate dynamic metrics
 df = pd.DataFrame(incidents)
+avg_time_val = 0
+if not df.empty:
+    resolved_df = df[df["Status"] == "RESOLVED ✅"]
+    avg_time_val = resolved_df["Resolution Time (s)"].mean() if not resolved_df.empty else 0
+total_incidents = len(df)
+
+# Top 3 Huge Cards
+col_m1, col_m2, col_m3 = st.columns(3)
+
+with col_m1:
+    st.markdown(f"""
+    <div class="glass-card">
+        <div class="metric-label">TOTAL DOWNTIME COST PREVENTED</div>
+        <div class="metric-value-huge">${total_saved:,.2f}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_m2:
+    st.markdown(f"""
+    <div class="glass-card">
+        <div class="metric-label">AVERAGE AI RESOLUTION TIME</div>
+        <div class="metric-value" style="color: #0bc5ea;">{avg_time_val:.1f}s</div>
+        <div style="color: #00fa9a; font-size: 0.95rem; font-weight:bold;">↓ 15m faster than human SLA</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_m3:
+    st.markdown(f"""
+    <div class="glass-card">
+        <div class="metric-label">AUTONOMOUS EVENTS HANDLED</div>
+        <div class="metric-value" style="color: #d100d1;">{total_incidents}</div>
+        <div style="color: #9ca3af; font-size: 0.95rem;">Zero human intervention required</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("<hr>", unsafe_allow_html=True)
+
+# --- Bottom Content Layout ---
+left_col, right_col = st.columns([1, 1.5])
 
 with left_col:
-    st.subheader("📊 Fleet Health Analytics")
+    st.markdown("<h3 style='margin-bottom: 1rem;'>🌍 Topology & Fleet Health</h3>", unsafe_allow_html=True)
+    
     if not df.empty:
+        # Wrap Data in Glass Card
+        st.markdown('<div class="glass-card" style="padding: 10px; margin-bottom: 30px;">', unsafe_allow_html=True)
+        # Status Pie Chart with transparent background
         status_counts = df["Status"].value_counts().reset_index()
         status_counts.columns = ["Status", "Count"]
-        
-        # Color mapping for pie chart
         color_map = {
             "RESOLVED ✅": "#00fa9a", 
             "ESCALATED 🔴": "#ff4b4b", 
             "OPEN 🟡": "#ffd166"
         }
-        
-        fig = px.pie(status_counts, values="Count", names="Status", hole=0.5, 
-                     color="Status", color_discrete_map=color_map)
+        fig = px.pie(status_counts, values="Count", names="Status", hole=0.75, color="Status", color_discrete_map=color_map)
         fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)", 
             plot_bgcolor="rgba(0,0,0,0)", 
-            margin=dict(t=20, b=20, l=20, r=20),
+            margin=dict(t=20, b=20, l=10, r=10),
             showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
+            legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5, font=dict(color="white"))
         )
+        fig.update_traces(textposition='inside', textinfo='percent', hoverinfo='label+percent')
         st.plotly_chart(fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        # Quick System Metrics
-        resolved_df = df[df["Status"] == "RESOLVED ✅"]
-        avg_time = resolved_df["Resolution Time (s)"].mean() if not resolved_df.empty else 0
+        # --- Generative Blast Radius Graph ---
+        st.markdown('<div class="glass-card" style="text-align: left; padding: 25px;">', unsafe_allow_html=True)
+        st.markdown("<div class='metric-label' style='margin-bottom:20px; text-align: center;'>🕸️ SYSTEM BLAST RADIUS</div>", unsafe_allow_html=True)
         
-        metric_col1, metric_col2 = st.columns(2)
-        with metric_col1:
-            st.metric("Avg. Resolution Time", f"{avg_time:.1f}s", delta="-15m (vs Human)" if avg_time > 0 else None)
-        with metric_col2:
-            st.metric("Total Automated Incidents", len(df))
+        dot = "digraph BlastRadius {\n"
+        dot += '  bgcolor="transparent";\n'
+        dot += '  rankdir="LR";\n'
+        dot += "  node [fontname=Inter, shape=box, rounded=true, style=filled, penwidth=0];\n"
+        dot += '  edge [color="#6b7280", penwidth=2];\n'
+        dot += '  SERVER [label="PRODUCTION EC2\\nTarget Node", fillcolor="#1f2937", fontcolor="#ffffff"];\n'
+        
+        for _, r in df.head(5).iterrows():
+            issue_type = "anomaly"
+            for lg in r["Logs"]:
+                if lg.get("action") == "DIAGNOSIS_RECEIVED":
+                    issue_type = lg.get("data", {}).get("issue_type", "anomaly")
+                    break
+            
+            # Map status to neon colors
+            status_color = "#00fa9a" if "RESOLVED ✅" in r["Status"] else "#ff4b4b" if "ESCALATED 🔴" in r["Status"] else "#ffd166"
+            font_color = "#000000" if "RESOLVED ✅" in r["Status"] else "#ffffff"
+            
+            dot += f'  "{r["Incident ID"]}" [label="{r["Incident ID"]}\\n({issue_type})", fillcolor="{status_color}", fontcolor="{font_color}"];\n'
+            dot += f'  SERVER -> "{r["Incident ID"]}";\n'
+            
+        dot += "}\n"
+        st.graphviz_chart(dot)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
     else:
-        st.info("System is healthy. No incidents detected yet. Run the chaos/diagnostic script to trigger an event.")
+        st.info("System is healthy. No incidents detected yet.")
 
 with right_col:
-    st.subheader("📡 Live Multi-Agent Audit Feed")
-    st.markdown("Transparent, auditable log of AI thoughts and actions.")
+    st.markdown("<h3 style='margin-bottom: 1rem;'>📡 Multi-Agent Execution Stream</h3>", unsafe_allow_html=True)
     
     if not df.empty:
         # Loop through incidents
         for idx, row in df.iterrows():
-            # Determine card border color based on status
-            border_color = "#00fa9a" if "RESOLVED" in row["Status"] else "#ff4b4b" if "ESCALATED" in row["Status"] else "#ffd166"
-            
-            with st.expander(f"Incident: {row['Incident ID']} | {row['Status']} | 🕒 {row['Start Time']}", expanded=(idx == 0)):
+            with st.expander(f"🔮 {row['Incident ID']} | Status: {row['Status']} | Alert Time: {row['Start Time']}", expanded=(idx == 0)):
                 for log in row["Logs"]:
                     agent = log.get('agent', 'System')
                     action = log.get('action', 'UNKNOWN')
                     ts = datetime.fromtimestamp(log.get('timestamp', time.time())).strftime('%H:%M:%S')
                     
-                    # Custom colors for each agent
+                    # Agent specific styling
                     agent_colors = {
-                        "Orchestrator": "#d100d1", # Magenta
-                        "Diagnostic Agent": "#00d1d1", # Cyan
-                        "Execution": "#ffa500", # Orange
-                        "SLA Monitor": "#ff0000", # Red
-                        "Verifier": "#00ff00" # Green
+                        "Orchestrator": "#d100d1", 
+                        "Diagnostic Agent": "#0bc5ea", 
+                        "Execution": "#f59e0b",
+                        "Execution Agent": "#f59e0b",
+                        "Predictive Agent": "#8b5cf6",
+                        "SLA Monitor": "#ef4444", 
+                        "Reporting Agent": "#10b981",
+                        "Verifier": "#00fa9a" 
                     }
                     color = agent_colors.get(agent, "#ffffff")
                     
-                    st.markdown(f"**[{ts}]** 🤖 <span style='color:{color}'>**{agent}**</span> ⚡ `{action}`", unsafe_allow_html=True)
+                    # Log header rendering
+                    st.markdown(f"""
+                    <div class="terminal-log" style="border-left-color: {color};">
+                        <span style="color: #6b7280;">[{ts}]</span> 
+                        <span class="agent-name" style="color: {color};">{agent}</span> 
+                        <span style="color: #e5e7eb;">>> {action}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
                     
-                    # Show payload if it exists
+                    # Log payload parsing
                     payload = log.get("data", None)
                     if not payload and "reason" in log:
                         payload = {"reason": log.get("reason")}
                         
                     if payload:
-                        # NEW: Check if this payload is our Generative RCA Markdown
                         if action == "POST_MORTEM_GENERATED" and "rca_markdown" in payload:
-                            st.markdown("---")
-                            st.markdown("### 📄 Auto-Generated RCA Report")
+                            st.markdown("""<div style="background: rgba(16, 185, 129, 0.1); padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(16, 185, 129, 0.4);">""", unsafe_allow_html=True)
+                            st.markdown("##### 📄 Executive RCA Post-Mortem")
                             st.markdown(payload["rca_markdown"])
-                            st.markdown("---")
+                            st.markdown("</div>", unsafe_allow_html=True)
+                            
+                        elif action == "AGENT_DEBATE_LOG" and "transcript" in payload:
+                            st.markdown("""<div style="background: rgba(209, 0, 209, 0.1); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #d100d1;">""", unsafe_allow_html=True)
+                            st.markdown("<h4 style='color: #d100d1; margin-bottom: 15px;'>🗣️ AI War Room Debate Transcripts</h4>", unsafe_allow_html=True)
+                            for msg in payload.get("transcript", []):
+                                persona = msg.get("persona", "Agent")
+                                text = msg.get("message", "")
+                                p_color = "#f59e0b" if persona == "The Cowboy" else "#0bc5ea" if persona == "The Conservative" else "#00fa9a"
+                                st.markdown(f"**<span style='color:{p_color}; font-size:1.1rem;'>{persona}</span>**: <span style='color: #e5e7eb; font-style: italic;'>\"{text}\"</span>", unsafe_allow_html=True)
+                            st.markdown(f"<div style='margin-top: 20px; padding: 10px; background: rgba(0, 250, 154, 0.1); border-radius: 5px; color: #00fa9a; font-weight: bold; font-size: 1.1rem;'>⚖️ Final Judge Consensus: <span style='font-family: monospace; color: white;'>{payload.get('final_command', 'N/A')}</span></div>", unsafe_allow_html=True)
+                            st.markdown("</div>", unsafe_allow_html=True)
+                            
                         else:
                             st.json(payload, expanded=False)
+                            
     else:
-        st.write("Listening to Kafka and Redis event buses...")
+        st.markdown("""
+        <div class="glass-card" style="margin-top: 20px; padding: 40px;">
+            <div style="color: #00fa9a; font-size: 3rem; margin-bottom: 20px;">🛡️</div>
+            <div style="font-size: 1.5rem; font-weight: bold; color:white;">AWAITING TELEMETRY</div>
+            <div style="margin-top: 10px; color:#9ca3af;">Listening to secure Event Bus...</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# Auto-refresh logic (Runs gracefully at the end of the script)
+# Auto-refresh logic 
 if auto_refresh:
     time.sleep(2)
     st.rerun()
