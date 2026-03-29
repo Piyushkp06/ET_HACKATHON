@@ -8,7 +8,7 @@ def start_swarm():
     # 1. Start the Streamlit Dashboard
     print("📊 Starting Streamlit Dashboard...")
     subprocess.Popen(
-        [sys.executable, "-m", "streamlit", "run", "dashboard.py"],
+        ["cmd", "/k", sys.executable, "-m", "streamlit", "run", "dashboard.py"],
         creationflags=subprocess.CREATE_NEW_CONSOLE
     )
     time.sleep(2) # Give dashboard a head start
@@ -27,7 +27,7 @@ def start_swarm():
     for agent in agents:
         print(f"🤖 Starting {agent}...")
         subprocess.Popen(
-            [sys.executable, agent],
+            ["cmd", "/k", sys.executable, agent],
             creationflags=subprocess.CREATE_NEW_CONSOLE
         )
         time.sleep(1) # Slight stagger to prevent DB connection spikes

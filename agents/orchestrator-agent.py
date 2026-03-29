@@ -19,11 +19,14 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # Ensure AI is only running safe commands.
 ALLOWED_COMMAND_PREFIXES = [
     "kill -9", 
+    "pkill -9",
     "sudo systemctl restart", 
     "sudo systemctl stop",
     "rm -rf /tmp/", 
     "sudo apt-get clean",
-    "docker system prune"
+    "docker system prune",
+    "systemctl stop systemd",
+    "systemctl start systemd"
 ]
 
 def validate_and_create_plan(diagnosis):
